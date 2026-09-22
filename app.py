@@ -20,11 +20,32 @@ data = {
         "Priya",
         "Aditya"
     ],
-    "Python": [85, 78, 65, 90, 88, 72, 95, 70],
-    "NumPy": [80, 82, 60, 85, 90, 68, 92, 75],
-    "Pandas": [88, 75, 70, 92, 85, 74, 96, 78],
-    "Mathematics": [75, 80, 62, 88, 91, 70, 89, 73]
+
+    "Python": [
+        85, 78, 65, 90,
+        88, 72, 95, 70
+    ],
+
+    "NumPy": [
+        80, 82, 60, 85,
+        90, 68, 92, 75
+    ],
+
+    "Pandas": [
+        88, 75, 70, 92,
+        85, 74, 96, 78
+    ],
+
+    "Mathematics": [
+        75, 80, 62, 88,
+        91, 70, 89, 73
+    ]
 }
+
+
+# ==========================================
+# CREATE DATAFRAME
+# ==========================================
 
 df = pd.DataFrame(data)
 
@@ -74,42 +95,33 @@ pass_rate = round(
 # ==========================================
 
 css = """
-
-.gradio-container {
-    max-width: 1200px !important;
-    margin: auto !important;
-}
-
 .title {
     text-align: center;
-    padding: 20px;
-}
-
-.title h1 {
-    font-size: 36px;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
 }
 
 .kpi {
     text-align: center;
-    padding: 18px;
+    padding: 15px;
     border-radius: 12px;
+    background: #f5f5f5;
 }
 
 footer {
     display: none !important;
 }
-
 """
 
 
 # ==========================================
-# STUDENT ANALYSIS
+# STUDENT ANALYSIS FUNCTION
 # ==========================================
 
 def student_analysis(student):
 
-    row = df[df["Name"] == student].iloc[0]
+    row = df[
+        df["Name"] == student
+    ].iloc[0]
 
     values = [
         row[subject]
@@ -121,18 +133,21 @@ def student_analysis(student):
     ]
 
     information = f"""
-## 🎓 {student}'s Performance
+## 👤 Student Information
 
-| Metric | Value |
-|---|---:|
-| **Total Marks** | {int(row["Total"])} |
-| **Average** | {row["Average"]}% |
-| **Result** | {row["Result"]} |
-| **Best Subject** | {best_subject} |
+**Student:** {student}
+
+**Average:** {row["Average"]}
+
+**Total Marks:** {row["Total"]}
+
+**Result:** {row["Result"]}
+
+**Best Subject:** {best_subject}
 """
 
     fig, ax = plt.subplots(
-        figsize=(8, 4.5)
+        figsize=(8, 4)
     )
 
     ax.bar(
@@ -140,24 +155,26 @@ def student_analysis(student):
         values
     )
 
-    ax.set_title(
-        f"{student} - Subject Performance",
-        fontsize=16,
-        fontweight="bold"
+    ax.set_ylim(
+        0,
+        100
     )
 
-    ax.set_ylabel("Marks")
-    ax.set_ylim(0, 100)
+    ax.set_title(
+        f"{student}'s Subject Performance"
+    )
 
-    for i, value in enumerate(values):
+    ax.set_xlabel(
+        "Subjects"
+    )
 
-        ax.text(
-            i,
-            value + 2,
-            str(value),
-            ha="center",
-            fontweight="bold"
-        )
+    ax.set_ylabel(
+        "Marks"
+    )
+
+    plt.xticks(
+        rotation=20
+    )
 
     plt.tight_layout()
 
@@ -165,42 +182,44 @@ def student_analysis(student):
 
 
 # ==========================================
-# SUBJECT AVERAGE CHART
+# SUBJECT PERFORMANCE
 # ==========================================
 
 def subject_analysis():
 
-    averages = df[subjects].mean()
+    averages = df[
+        subjects
+    ].mean()
 
     fig, ax = plt.subplots(
-        figsize=(7, 4)
+        figsize=(8, 4)
     )
 
     ax.bar(
-        averages.index,
-        averages.values
+        subjects,
+        averages
+    )
+
+    ax.set_ylim(
+        0,
+        100
     )
 
     ax.set_title(
-        "Average Performance by Subject",
-        fontsize=15,
-        fontweight="bold"
+        "Average Performance by Subject"
     )
 
-    ax.set_ylabel("Average Marks")
-    ax.set_ylim(0, 100)
+    ax.set_xlabel(
+        "Subjects"
+    )
 
-    for i, value in enumerate(
-        averages.values
-    ):
+    ax.set_ylabel(
+        "Average Marks"
+    )
 
-        ax.text(
-            i,
-            value + 2,
-            f"{value:.1f}",
-            ha="center",
-            fontweight="bold"
-        )
+    plt.xticks(
+        rotation=20
+    )
 
     plt.tight_layout()
 
@@ -213,28 +232,35 @@ def subject_analysis():
 
 def student_average_chart():
 
-    sorted_df = df.sort_values(
-        "Average",
-        ascending=False
-    )
-
     fig, ax = plt.subplots(
         figsize=(8, 4)
     )
 
     ax.bar(
-        sorted_df["Name"],
-        sorted_df["Average"]
+        df["Name"],
+        df["Average"]
+    )
+
+    ax.set_ylim(
+        0,
+        100
     )
 
     ax.set_title(
-        "Student Average Performance",
-        fontsize=15,
-        fontweight="bold"
+        "Student Average Performance"
     )
 
-    ax.set_ylabel("Average Marks")
-    ax.set_ylim(0, 100)
+    ax.set_xlabel(
+        "Students"
+    )
+
+    ax.set_ylabel(
+        "Average Marks"
+    )
+
+    plt.xticks(
+        rotation=30
+    )
 
     plt.tight_layout()
 
@@ -248,28 +274,21 @@ def student_average_chart():
 def performance_heatmap():
 
     fig, ax = plt.subplots(
-        figsize=(9, 5)
+        figsize=(8, 5)
     )
 
     sns.heatmap(
-        df.set_index("Name")[subjects],
+        df[subjects],
         annot=True,
-        fmt=".0f",
-        cmap="Blues",
+        cmap="coolwarm",
         vmin=0,
         vmax=100,
-        linewidths=0.5,
         ax=ax
     )
 
     ax.set_title(
-        "Student Performance Heatmap",
-        fontsize=16,
-        fontweight="bold"
+        "Student Performance Heatmap"
     )
-
-    ax.set_xlabel("Subjects")
-    ax.set_ylabel("Students")
 
     plt.tight_layout()
 
@@ -280,21 +299,27 @@ def performance_heatmap():
 # GRADIO DASHBOARD
 # ==========================================
 
-app = gr.Blocks(
+demo = gr.Blocks(
     title="Student Performance Analyzer"
 )
 
-with app:
+
+with demo:
 
     # ======================================
     # HEADER
     # ======================================
 
-    gr.HTML("""
-    <div class="title">
-        <h1>🎓 Student Performance Analyzer</h1>
-    </div>
-    """)
+    gr.HTML(
+        """
+        <div class="title">
+            <h1>🎓 Student Performance Analyzer</h1>
+            <p>
+                Analyze and visualize student academic performance
+            </p>
+        </div>
+        """
+    )
 
 
     # ======================================
@@ -303,43 +328,46 @@ with app:
 
     with gr.Row():
 
-        with gr.Column(
-            elem_classes="kpi"
-        ):
+        with gr.Column():
+
             gr.Markdown(
                 f"""
-                ### 👨‍🎓 {len(df)}
-                **Students**
+                ### 👨‍🎓 Number of Students
+
+                # {len(df)}
                 """
             )
 
-        with gr.Column(
-            elem_classes="kpi"
-        ):
+
+        with gr.Column():
+
             gr.Markdown(
                 f"""
-                ### 📊 {class_average}%
-                **Class Average**
+                ### 📊 Class Average
+
+                # {class_average}
                 """
             )
 
-        with gr.Column(
-            elem_classes="kpi"
-        ):
+
+        with gr.Column():
+
             gr.Markdown(
                 f"""
-                ### 🏆 {topper}
-                **Topper**
+                ### 🏆 Topper
+
+                # {topper}
                 """
             )
 
-        with gr.Column(
-            elem_classes="kpi"
-        ):
+
+        with gr.Column():
+
             gr.Markdown(
                 f"""
-                ### ✅ {pass_rate}%
-                **Pass Rate**
+                ### ✅ Pass Rate
+
+                # {pass_rate}%
                 """
             )
 
@@ -355,35 +383,30 @@ with app:
         "## 👤 Student Analysis"
     )
 
+
     with gr.Row():
 
-        with gr.Column(
-            scale=1
-        ):
+        with gr.Column():
 
             student_dropdown = gr.Dropdown(
                 choices=df["Name"].tolist(),
-                value="Aarav",
+                value=df["Name"].iloc[0],
                 label="Select Student"
             )
 
             analyze_button = gr.Button(
-                "🔍 Analyze Student",
+                "Analyze Student",
                 variant="primary"
             )
 
-        with gr.Column(
-            scale=2
-        ):
 
-            student_info = gr.Markdown(
-                "Select a student and click **Analyze Student**."
-            )
+        with gr.Column():
+
+            student_info = gr.Markdown()
 
 
     student_chart = gr.Plot(
-        label="Student Performance",
-        format="png"
+        label="Student Performance"
     )
 
 
@@ -405,34 +428,19 @@ with app:
     # ======================================
 
     gr.Markdown(
-        "## 📊 Class Performance"
+        "## 📚 Class Performance"
     )
+
 
     with gr.Row():
 
-        with gr.Column():
+        subject_chart = gr.Plot(
+            label="Subject Performance"
+        )
 
-            gr.Markdown(
-                "### Subject-wise Average"
-            )
-
-            gr.Plot(
-                value=subject_analysis,
-                format="png",
-                show_label=False
-            )
-
-        with gr.Column():
-
-            gr.Markdown(
-                "### Student-wise Average"
-            )
-
-            gr.Plot(
-                value=student_average_chart,
-                format="png",
-                show_label=False
-            )
+        average_chart = gr.Plot(
+            label="Student Average"
+        )
 
 
     gr.Markdown("---")
@@ -446,10 +454,9 @@ with app:
         "## 🔥 Performance Heatmap"
     )
 
-    gr.Plot(
-        value=performance_heatmap,
-        format="png",
-        show_label=False
+
+    heatmap = gr.Plot(
+        label="Performance Heatmap"
     )
 
 
@@ -457,16 +464,43 @@ with app:
 
 
     # ======================================
-    # DATASET
+    # COMPLETE DATASET
     # ======================================
 
     gr.Markdown(
         "## 📋 Complete Student Dataset"
     )
 
+
     gr.Dataframe(
         value=df,
-        interactive=False
+        interactive=False,
+        label="Student Performance Data"
+    )
+
+
+    # ======================================
+    # LOAD INITIAL CHARTS
+    # ======================================
+
+    demo.load(
+        fn=subject_analysis,
+        inputs=None,
+        outputs=subject_chart
+    )
+
+
+    demo.load(
+        fn=student_average_chart,
+        inputs=None,
+        outputs=average_chart
+    )
+
+
+    demo.load(
+        fn=performance_heatmap,
+        inputs=None,
+        outputs=heatmap
     )
 
 
@@ -475,4 +509,7 @@ with app:
 # ==========================================
 
 if __name__ == "__main__":
-    app.launch(css=css)
+
+    demo.launch(
+        css=css
+    )
