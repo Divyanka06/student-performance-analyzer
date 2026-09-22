@@ -280,10 +280,11 @@ def performance_heatmap():
 # GRADIO DASHBOARD
 # ==========================================
 
-with gr.Blocks(
-    title="Student Performance Analyzer",
-    css=css
-) as app:
+app = gr.Blocks(
+    title="Student Performance Analyzer"
+)
+
+with app:
 
     # ======================================
     # HEADER
@@ -474,5 +475,4 @@ with gr.Blocks(
 # ==========================================
 
 if __name__ == "__main__":
-
-    app.launch()
+    app.launch(css=css)
