@@ -1,10 +1,9 @@
 import gradio as gr
+from fastapi import FastAPI
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-
 # ==========================================
 # DATA
 # ==========================================
@@ -502,10 +501,21 @@ with demo:
         inputs=None,
         outputs=heatmap
     )
+# ==========================================
+# VERCEL FASTAPI APP
+# ==========================================
+
+app = FastAPI()
+
+gr.mount_gradio_app(
+    app,
+    demo,
+    path="/"
+)
 
 
 # ==========================================
-# RUN APP
+# RUN APP LOCALLY
 # ==========================================
 
 if __name__ == "__main__":
